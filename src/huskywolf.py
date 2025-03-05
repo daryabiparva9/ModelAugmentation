@@ -26,6 +26,7 @@ def load_and_preprocess_images(image_paths, target_size=(299, 299)):
 # Function to extract features using Inception model
 def extract_features(preprocessed_images):
     # Load Inception model (without top layers)
+    print(f'we have come extract features, len:{len(preprocessed_images)}\n \n')
     base_model = InceptionV3(weights='imagenet', include_top=False)
     
     # Get the output of the first max pooling layer
@@ -44,6 +45,7 @@ def extract_features(preprocessed_images):
 # Function to train the biased classifier
 def train_biased_classifier(wolf_snow_paths, husky_no_snow_paths):
     # Combine image paths and create labels
+    print(f'wolf snow path is {wolf_snow_paths} \n \n \n')
     image_paths = wolf_snow_paths + husky_no_snow_paths
     labels = np.array([1] * len(wolf_snow_paths) + [0] * len(husky_no_snow_paths))
     
@@ -140,11 +142,15 @@ def run_wolf_husky_experiment(data_dir):
             huskies_snow/    # Huskies in snow
             huskies_no_snow/ # Huskies without snow
     """
+    # /home/bipar001/anaconda3/python_test/huskyvswolf/ModelAugmentation/src/data_dir/train/wolves_snow/im3.jpg
     # Load training data (biased dataset)
-    wolf_snow_paths = glob.glob(os.path.join(data_dir, 'train/wolves_snow/*'))
-    husky_no_snow_paths = glob.glob(os.path.join(data_dir, 'train/huskies_no_snow/*'))
+    wolf_snow_path2 = [f for f in os.listdir(f'{data_train}/wolves_snow') if os.path.isfile(os.path.join(f'{data_train}/wolves_snow',f))]
+    print(f'\n new wolf path: {wolf_snow_path2} \n \n')
+    wolf_snow_paths = glob.glob(os.path.join(data_dir, 'wolves_snow', '*.[jJ][pP]*'))
+    print(f'blah{glob.glob(os.path.join(data_dir, "wolves_snow", "*"))} \n \n')
+    husky_no_snow_paths = glob.glob(os.path.join(data_dir, 'huskies_no_snow/*'))
     
-    print(f"Training with {len(wolf_snow_paths)} wolves (with snow) and {len(husky_no_snow_paths)} huskies (without snow)")
+    print(f"Training with {len(wolf_snow_paths)} wolves (with snow) and {len(husky_no_snow_paths)} huskies (without snow)\n \n")
     
     # Train biased model
     model, train_features = train_biased_classifier(wolf_snow_paths, husky_no_snow_paths)
@@ -194,5 +200,6 @@ def run_wolf_husky_experiment(data_dir):
 # Example usage
 if __name__ == "__main__":
     # You'll need to create the directory structure and place the images as described above
-    data_dir = "./wolf_husky_data"
-    model, test_paths, predictions, true_labels = run_wolf_husky_experiment(data_dir)
+    data_train = "./data_dir/train"
+    data_test = "/data_dir/test"
+    model, test_paths, predictions, true_labels = run_wolf_husky_experiment(data_train)
