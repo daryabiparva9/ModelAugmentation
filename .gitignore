@@ -1,1 +1,3 @@
 src/data_dir/
+*.pth
+*.png
