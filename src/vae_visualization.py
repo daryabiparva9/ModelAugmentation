@@ -39,7 +39,7 @@ def visualize_vae_reconstructions(vae, images, labels):
         axes[i, 1].axis('off')
 
     plt.tight_layout()
-    plt.savefig('vae_reconstructions.png')
+    plt.savefig('figs/vae_reconstructions.png')
     plt.show()
 
 
@@ -74,7 +74,7 @@ def visualize_latent_space(vae, images, labels):
     plt.ylabel('Principal Component 2')
     plt.legend()
     plt.grid(alpha=0.3)
-    plt.savefig('vae_latent_space.png')
+    plt.savefig('figs/vae_latent_space.png')
     plt.show()
 
 
@@ -139,7 +139,7 @@ def visualize_latent_space_interpolation(vae, images, labels, device, num_steps=
 
     plt.suptitle(f'Latent Space Interpolation: Digit {digits[0]} to Digit {digits[1]}')
     plt.tight_layout()
-    plt.savefig('vae_interpolation.png')
+    plt.savefig('figs/vae_interpolation.png')
     plt.show()
 
 
@@ -171,5 +171,5 @@ def visualize_vae_generation(vae, device, latent_dim=32, grid_size=5):
 
     plt.suptitle('Generated Digits from Random Latent Vectors')
     plt.tight_layout()
-    plt.savefig('vae_generated_digits.png')
+    plt.savefig('figs/vae_generated_digits.png')
     plt.show()

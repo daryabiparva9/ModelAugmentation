@@ -2,3 +2,5 @@ src/data_dir/
 *.pth
 *.png
 src/models
+src/__pycache__
+src/data
