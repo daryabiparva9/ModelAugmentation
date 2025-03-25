@@ -4,3 +4,4 @@ src/data_dir/
 src/models
 src/__pycache__
 src/data
+src/figs
