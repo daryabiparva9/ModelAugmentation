@@ -1,3 +1,4 @@
 src/data_dir/
 *.pth
 *.png
+src/models
