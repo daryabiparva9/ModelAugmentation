@@ -5,3 +5,4 @@ src/models
 src/__pycache__
 src/data
 src/figs
+*.pyc
