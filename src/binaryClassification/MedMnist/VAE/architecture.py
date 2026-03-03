@@ -398,6 +398,6 @@ class VAE(nn.Module):
         
         self.soft_sim = soft_sim
         
-        return x, z, soft_sim
+        return x, z, soft_sim, z_mean, z_log_var
                 
           
