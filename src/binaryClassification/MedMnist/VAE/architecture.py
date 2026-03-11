@@ -271,7 +271,56 @@ class Decoder(nn.Module):
         return x
     
     
+    
+class DecoderTanh(nn.Module):
+    
+    def __init__(self, target_shape, latend_dim, layer_list):
+        """
 
+        Args:
+            target_shape : The shape of the final image
+            latend_dim (int): 
+            layer_list (list of tuples): layer lists 
+            
+            target shape could be (3, 64, 64)
+            We have stride = 2
+            We have len(layer_list) as #conv layers
+            thus, spatial reduction is 64/(2 ^ len(layer_list))
+            which is the spatial size of encoders final feature map
+            So we start by basically unflattening
+        """
+        super().__init__()
+        target_shape_side = target_shape[-1]
+        self.startDim = target_shape_side // 2 ** len(layer_list)
+        self.first_channels = layer_list[0][-1]
+        
+        # Unflatten
+        self.predecoder = nn.Linear(latend_dim,
+                                    self.first_channels * self.startDim * self.startDim)
+        
+        feature_layers = []
+        for layer in layer_list:
+            n_res_block, n_filters = layer
+            feature_layers.append(ConvTResBlock(n_out_filters=n_filters,
+                                                n_res_block=n_res_block,
+                                                n_in_filters=n_filters))
+        self.features = nn.Sequential(*feature_layers)
+        self.decoder_output = nn.LazyConvTranspose2d(target_shape[0], 3, padding=1)
+        self.act = nn.Tanh()
+    
+    def forward(self, x):
+        x = self.predecoder(x)
+        # Unflatten (reshape)
+        x = x.view(x.shape[0],
+                   self.first_channels,
+                   self.startDim,
+                   self.startDim)
+        x = self.features(x)
+        x = self.decoder_output(x)
+        x = self.act(x)
+        
+        return x
+    
 
 
 
@@ -366,8 +415,9 @@ class VAE(nn.Module):
         
         z_mean, z_log_var = self.encoder(x)
         
-        self.q_z = torch.distributions.normal.Normal(z_mean,
-                                                   torch.exp(0.5 * z_log_var))
+        z_log_var = torch.clamp(z_log_var, min=-15, max=15)
+
+        self.q_z = torch.distributions.Normal(z_mean, torch.exp(0.5 * z_log_var) + 1e-6)
 
         device = z_mean.device
 
