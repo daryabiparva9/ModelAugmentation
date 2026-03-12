@@ -6,3 +6,8 @@ src/__pycache__
 src/data
 src/figs
 *.pyc
+*.mat
+*.pt
+*.json
+*.yml
+__pycache__/
