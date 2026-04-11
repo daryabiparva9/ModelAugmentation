@@ -415,7 +415,7 @@ class VAE(nn.Module):
         
         z_mean, z_log_var = self.encoder(x)
         
-        z_log_var = torch.clamp(z_log_var, min=-15, max=15)
+        z_log_var = torch.clamp(z_log_var, min=-5, max=5)
 
         self.q_z = torch.distributions.Normal(z_mean, torch.exp(0.5 * z_log_var) + 1e-6)
 
